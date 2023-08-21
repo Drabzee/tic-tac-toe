@@ -1,0 +1,21 @@
+@import '../../variables.module.scss';
+
+.homePage {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 482px;
+    margin: 0 auto;
+    padding: 16px 10px;
+
+    .header {
+        display: flex;
+        gap: 6px;
+
+        svg:first-of-type { color: $primary-color; }
+        svg:last-of-type { color: $secondary-color; }
+    }
+}

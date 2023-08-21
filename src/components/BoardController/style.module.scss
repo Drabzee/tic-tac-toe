@@ -1,0 +1,37 @@
+@import '../../variables.module.scss';
+
+.header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    height: 60px;
+
+    button {
+        background-color: $background-color-extra-light;
+        border: 0;
+        height: 100%;
+        padding: 0 20px;
+        cursor: pointer;
+        color: $background-color;
+        border-radius: 10px;
+        font-size: 24px;
+        box-shadow: 0 5px 0 rgba($background-color-extra-light, .4);
+    }
+
+    .turnIndicator {
+        background-color: $background-color-light;
+        color: $background-color-extra-light;
+        border-radius: 10px;
+        height: 100%;
+        padding: 0 30px;
+        box-shadow: 0 5px 0 $background-color-dark;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 18px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+}

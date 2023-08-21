@@ -1,0 +1,57 @@
+@import '../../variables.module.scss';
+
+.selectionPanel {
+    margin: 40px 0;
+    padding: 24px;
+    background-color: $background-color-light;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 18px;
+    box-shadow: 0 8px 0px $background-color-dark;
+
+    h4 {
+        text-transform: uppercase;
+        font-size: 18px;
+    }
+
+    .selector {
+        margin: 24px 0 16px;
+        padding: 8px;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        background-color: $background-color;
+        border-radius: 10px;
+        gap: 8px;
+
+        span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px 0;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 10px;
+            color: $background-color-extra-light;
+
+            &:hover {
+                background-color: rgba($background-color-light, .6)
+            }
+
+            &.active {
+                background-color: $background-color-extra-light;
+                color: $background-color;
+            }
+
+        }
+    }
+
+    p {
+        text-transform: uppercase;
+        font-size: 14px;
+        opacity: .6;
+    }
+}

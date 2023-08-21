@@ -1,0 +1,39 @@
+@import '../../variables.module.scss';
+
+.scoreBoard {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    > div {
+        border-radius: 10px;
+        color: $background-color;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 30%;
+        padding: 4px 0;
+        
+        &.cross {
+            background-color: $primary-color;
+            box-shadow: 0 6px 0 $primary-color-dark;
+        }
+    
+        &.ties {
+            background-color: $background-color-extra-light;
+            box-shadow: 0 6px 0 rgba($background-color-extra-light, .4);
+        }
+
+        &.circle {
+            background-color: $secondary-color;
+            box-shadow: 0 6px 0 $secondary-color-dark;
+        }
+
+        span { font-size: 13px; }
+
+        h4 { font-size: 20px; }
+    }
+
+}

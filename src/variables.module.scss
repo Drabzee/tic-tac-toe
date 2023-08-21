@@ -1,0 +1,33 @@
+
+$background-color: #191919;
+$background-color-dark: #0f0f0f;
+$background-color-light: #303030;
+$background-color-extra-light: #d1d1d1;
+
+$accent-color: #2D4263;
+$accent-color-dark: #1b283b;
+$accent-color-light: #818ea1;
+
+$primary-color: #C84B31;
+$primary-color-dark: #782d1d;
+$primary-color-light: #ce5d46;
+
+$secondary-color: #eabc60;
+$secondary-color-dark: #8c713a;
+$secondary-color-light: #eec980;
+
+:export {
+    backgroundColor: $background-color;
+    
+    accentColor: $accent-color;
+    accentColorDark: $accent-color-dark;
+    accentColorLight: $accent-color-light;
+
+    primaryColor: $primary-color;
+    primaryColorDark: $primary-color-dark;
+    primaryColorLight: $primary-color-light;
+
+    secondaryColor: $secondary-color;
+    secondaryColorLark: $secondary-color-dark;
+    secondaryColorLight: $secondary-color-light;
+}

@@ -1,0 +1,56 @@
+@import '../../variables.module.scss';
+
+.promptModal {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: $background-color-light;
+    width: 100%;
+    align-items: center;
+    padding: 48px 0;
+
+    > h4 {
+        color: $background-color-extra-light;
+    }
+
+    .heading {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin: 24px 0;
+
+        span {
+            font-size: 40px;
+            font-weight: bold;
+        }
+        
+        &.cross { color: $primary-color; }
+        &.circle { color: $secondary-color; }
+    }
+
+    .ctaContainer {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        button {
+            cursor: pointer;
+            color: $background-color-light;
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 20px;
+            border: 0;
+            font-weight: 600;
+
+            &:first-of-type {
+                background-color: $background-color-extra-light;
+                box-shadow: 0 4px 0 rgba($background-color-extra-light, 0.3);
+            }
+
+            &:last-of-type {
+                background-color: $secondary-color;
+                box-shadow: 0 4px 0 rgba($secondary-color, 0.3);
+            }
+        }
+    }
+}

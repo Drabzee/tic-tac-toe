@@ -1,0 +1,33 @@
+@import '../../variables.module.scss';
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    
+    button {
+        width: 100%;
+        padding: 18px 0;
+        border-radius: 16px;
+        border: 0;
+        outline: 0;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+
+        &:first-of-type {
+            background-color: $secondary-color;
+            box-shadow: 0 8px 0px $secondary-color-dark;
+
+            &:hover { background-color: $secondary-color-light; }
+        }
+
+        &:last-of-type {
+            background-color: $primary-color;
+            box-shadow: 0 8px 0px $primary-color-dark;
+
+            &:hover { background-color: $primary-color-light; }
+        }
+    }
+}

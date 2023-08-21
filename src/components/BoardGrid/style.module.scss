@@ -1,0 +1,12 @@
+.grid {
+    display: grid;
+    margin: 40px 0;
+    width: 100%;
+    gap: 5%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+
+    @media (min-width: 375px) {
+        gap: 7%;
+    }
+}

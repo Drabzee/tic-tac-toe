@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction, ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import style from './style.module.scss';
+import { TPromptModalStatus } from '../../contexts/promptModalContext';
 
 type ModalTemplateProps = {
-    isModalOpen: boolean,
-    setIsModalOpen: Dispatch<SetStateAction<boolean>>,
+    isModalOpen: TPromptModalStatus,
     children: ReactNode,
 }
 

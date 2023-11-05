@@ -1,4 +1,4 @@
-import { MARK } from '../../types';
+import { GAME_STATUS, MARK } from '../../types';
 import Cross from '../Cross';
 import { Switch, Case, If, Then, Else } from 'react-if';
 import style from './style.module.scss';
@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from '../../redux/hooks';
 import Circle from '../Circle';
 import classnames from 'classnames/bind';
 import { markBlock, markWin } from '../../redux/slices/game';
-import { checkWinner } from '../../utilts';
+import { checkIsDraw, checkWinner } from '../../utilts';
 import { markDraw, toggleTurn } from '../../redux/slices/dashboard';
 import promptModalContext from '../../contexts/promptModalContext';
 
@@ -22,7 +22,6 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
 
   const [ isHovered, setIsHovered ] = useState<boolean>(false);
   const currentMark = useSelector(state => state.dashboard.currentMark);
-  const turnsCount = useSelector(state => state.game.turnsCount);
   const dispatch = useDispatch();
   const { setIsModalOpen } = useContext(promptModalContext)!;
 
@@ -38,12 +37,12 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
         setIsHovered(false);
         dispatch(markWin({mark: currentMark, streakIndex: streakIndex, streakType: streakType}));
         setTimeout(() => {
-          setIsModalOpen(true);
+          setIsModalOpen(GAME_STATUS.WON);
         }, 500);
-      } else if (turnsCount === 9) {
+      } else if (checkIsDraw()) {
         dispatch(markDraw());
         setTimeout(() => {
-          setIsModalOpen(true);
+          setIsModalOpen(GAME_STATUS.DRAW);
         }, 500);
       } else {
         dispatch(toggleTurn());

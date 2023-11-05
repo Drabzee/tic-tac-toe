@@ -40,3 +40,11 @@ export function checkWinner(currentMark:MARK, row:number, col:number):{
 
     return { isWinner: false, streakType: null, streakIndex: null }
 }
+
+export function checkIsDraw():boolean {
+    const {
+        game: { turnsCount }
+    } = store.getState();
+
+    return turnsCount === 9;
+}

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 import ModalTemplate from "../ModalTemplate";
 import style from './style.module.scss';
-import { GAME_MODE, MARK } from "../../types";
+import { GAME_MODE, GAME_STATUS, MARK } from "../../types";
 import { Case, Else, If, Switch, Then } from "react-if";
 import Cross from "../Cross";
 import Circle from "../Circle";
@@ -9,10 +9,11 @@ import classNames from "classnames/bind";
 import { useDispatch, useSelector } from "../../redux/hooks";
 import { restartGame } from "../../redux/slices/game";
 import { resetGame } from "../../redux/slices/dashboard";
+import { TPromptModalStatus } from "../../contexts/promptModalContext";
 
 type PromptModalProps = {
-  isModalOpen: boolean,
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>
+  isModalOpen: TPromptModalStatus,
+  setIsModalOpen: Dispatch<SetStateAction<TPromptModalStatus>>
 }
 
 const cx = classNames.bind(style);
@@ -34,9 +35,9 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
     dispatch(restartGame());
   }
 
-  return (
-    <ModalTemplate isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
-      <div className={style.promptModal}>
+  const renderWinnerBlock = () => {
+    return (
+      <>
         <h4>
           <Switch>
             <Case condition={gameMode === GAME_MODE.CPU}>
@@ -70,6 +71,22 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
           </If>
           <span>TAKES THE ROUND</span>
         </div>
+      </>
+    );
+  }
+
+  const renderDrawBlocK = () => {
+    return (
+      <div className={cx('heading')}>
+        <span>ROUND TIED</span>
+      </div>
+    );
+  }
+
+  return (
+    <ModalTemplate isModalOpen={isModalOpen}>
+      <div className={style.promptModal}>
+        {isModalOpen === GAME_STATUS.WON ? renderWinnerBlock() : renderDrawBlocK()}
         <div className={style.ctaContainer}>
           <button onClick={quitButtonClickHandler}>QUIT</button>
           <button onClick={restartButtonClickHandler}>NEXT ROUND</button>

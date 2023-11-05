@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { MARK, GAME_MODE, GAME_STATUS } from '../../types';
+import { MARK, GAME_MODE } from '../../types';
 import { markWin, restartGame } from './game';
 
 type TDashboardState = {
@@ -8,7 +8,6 @@ type TDashboardState = {
     isGameStarted: boolean,
     currentMark: MARK | null,
     scoreCard: [number, number, number],
-    gameStatus: GAME_STATUS
 }
 
 const initialDashboardState:TDashboardState = {
@@ -17,7 +16,6 @@ const initialDashboardState:TDashboardState = {
     isGameStarted: false,
     currentMark: null,
     scoreCard: [0, 0, 0],
-    gameStatus: GAME_STATUS.PAUSED
 };
 
 const dashboardSlice = createSlice({
@@ -40,9 +38,6 @@ const dashboardSlice = createSlice({
             }
         },
         resetGame: () => initialDashboardState,
-        switchGameStatus: (state, action: PayloadAction<GAME_STATUS>) => {
-            state.gameStatus = action.payload
-        },
         markDraw: (state) => {
             state.scoreCard[0]++;
         }
@@ -62,4 +57,4 @@ const dashboardSlice = createSlice({
 });
 
 export default dashboardSlice.reducer;
-export const { selectMark, startGame, resetGame, toggleTurn, switchGameStatus, markDraw } = dashboardSlice.actions;
+export const { selectMark, startGame, resetGame, toggleTurn, markDraw } = dashboardSlice.actions;

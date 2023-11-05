@@ -1,10 +1,13 @@
 import { createContext, useState, Dispatch, SetStateAction, ReactNode } from "react";
 import PromptModal from "../components/PromptModal";
+import { GAME_STATUS } from "../types";
 
-const promptModalContext = createContext<{ isModalOpen:boolean, setIsModalOpen:Dispatch<SetStateAction<boolean>> } | null>(null);
+export type TPromptModalStatus = false | GAME_STATUS;
+
+const promptModalContext = createContext<{ isModalOpen:TPromptModalStatus, setIsModalOpen:Dispatch<SetStateAction<TPromptModalStatus>> } | null>(null);
 
 export const Provider = ({ children }:{ children:ReactNode }) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<TPromptModalStatus>(false);
 
   return (
     <promptModalContext.Provider value={{isModalOpen, setIsModalOpen}}>

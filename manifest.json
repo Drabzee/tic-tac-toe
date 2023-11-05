@@ -5,7 +5,7 @@
     "theme_color": "#C84B31",
     "orientation": "portrait-primary",
     "display": "standalone",
-    "start_url": "/",
+    "start_url": "/tic-tac-toe/",
     "icons": [
         {
             "src": "/tic-tac-toe/icons/icon-72.png",

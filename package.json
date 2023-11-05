@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "prepublish": "npm run build",
-    "publish": "gh-pages -d build",
+    "publish": "gh-pages -d dist",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

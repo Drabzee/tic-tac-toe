@@ -56,6 +56,7 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
         </h4>
         <div className={cx(
           'heading',
+          'heading-large',
           {
             circle: currentMark === MARK.O,
             cross: currentMark === MARK.X,
@@ -75,7 +76,7 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
     );
   }
 
-  const renderDrawBlocK = () => {
+  const renderDrawBlock = () => {
     return (
       <div className={cx('heading')}>
         <span>ROUND TIED</span>
@@ -86,7 +87,7 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
   return (
     <ModalTemplate isModalOpen={isModalOpen}>
       <div className={style.promptModal}>
-        {isModalOpen === GAME_STATUS.WON ? renderWinnerBlock() : renderDrawBlocK()}
+        {isModalOpen === GAME_STATUS.WON ? renderWinnerBlock() : renderDrawBlock()}
         <div className={style.ctaContainer}>
           <button onClick={quitButtonClickHandler}>QUIT</button>
           <button onClick={restartButtonClickHandler}>NEXT ROUND</button>

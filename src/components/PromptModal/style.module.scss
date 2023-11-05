@@ -25,6 +25,14 @@
             font-weight: bold;
         }
         
+        &.heading-large {
+            span {
+                width: 212px;
+                
+                @media (min-width: 575px) { width: fit-content; }
+            }
+        }
+        
         &.cross { color: $primary-color; }
         &.circle { color: $secondary-color; }
     }

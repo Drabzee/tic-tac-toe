@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { MARK, STREAK_TYPE } from '../../types';
+import { GAME_STATE, MARK, STREAK_TYPE } from '../../types';
 import { resetGame } from './dashboard';
 
 type TBlockState = MARK | null;
@@ -13,7 +13,8 @@ type TGame = {
     rows: [number, number, number],
     cols: [number, number, number],
     diags: [number, number],
-    turnsCount: number
+    turnsCount: number,
+    gameState: GAME_STATE
 };
 
 const initialGameState:TGame = {
@@ -25,7 +26,8 @@ const initialGameState:TGame = {
     rows: [0, 0, 0],
     cols: [0, 0, 0],
     diags: [0, 0],
-    turnsCount: 0
+    turnsCount: 0,
+    gameState: GAME_STATE.HALT,
 };
 
 const gameSlice = createSlice({
@@ -79,6 +81,9 @@ const gameSlice = createSlice({
                 }
             }
         },
+        updateGameState: (state, action: PayloadAction<{newGameState: GAME_STATE}>) => {
+            state.gameState = action.payload.newGameState
+        }
     },
     extraReducers: builder => {
         builder.addCase(resetGame, () => initialGameState);
@@ -86,4 +91,4 @@ const gameSlice = createSlice({
 });
 
 export default gameSlice.reducer;
-export const { markBlock, restartGame, markWin } = gameSlice.actions;
+export const { markBlock, restartGame, markWin, updateGameState } = gameSlice.actions;

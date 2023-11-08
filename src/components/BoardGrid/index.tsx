@@ -1,15 +1,23 @@
-import { useRef } from 'react';
 import { useSelector } from '../../redux/hooks';
+import { GAME_STATE } from '../../types';
 import GridBlock from '../GridBlock';
 import style from './style.module.scss';
+import classnames from 'classnames/bind';
+
+const cx = classnames.bind(style);
 
 const BoardGrid = () => {
 
-  const boardRef = useRef<HTMLDivElement>(null);
   const blockState = useSelector(state => state.game.blockState);
+  const gameState = useSelector(state => state.game.gameState);
 
   return (
-    <div ref={boardRef} className={style.grid}>
+    <div
+      className={cx(
+        'grid',
+        { halted: gameState === GAME_STATE.HALT }
+      )}
+    >
         { blockState.flat().map((mark, index) => (
             <GridBlock
               key={index}

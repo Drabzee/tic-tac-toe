@@ -1,6 +1,6 @@
-import { MARK, STREAK_TYPE } from "./types";
+import { GAME_STATE, GAME_STATUS, MARK, STREAK_TYPE } from "./types";
 import store, { AppDispatch, RootState } from './redux/store';
-import { markBlock } from "./redux/slices/game";
+import { markBlock, updateGameState } from "./redux/slices/game";
 import { toggleTurn } from "./redux/slices/dashboard";
 
 export function markBlockWithMark(
@@ -8,9 +8,9 @@ export function markBlockWithMark(
     markWith: MARK,
     rowIndex: number,
     colIndex: number,
-    onWinCallback: (markedWith: MARK, streakIndex: number, streakType: STREAK_TYPE) => void,
-    onDrawCallback: () => void,
-) {
+    onWinCallback: ((markedWith: MARK, streakIndex: number, streakType: STREAK_TYPE) => void) | null = null,
+    onDrawCallback: (() => void) | null = null,
+): GAME_STATUS {
     dispatch(markBlock({ markedRow: rowIndex, markedCol: colIndex, currentMark: markWith }));
     const {game: { rows, cols, diags, turnsCount }} = store.getState();
     const { gameEndedWith, streakType, streakIndex } = checkGameState(
@@ -23,13 +23,16 @@ export function markBlockWithMark(
         colIndex
     );
 
-    if (gameEndedWith === 'WIN') {
+    if (gameEndedWith === GAME_STATUS.WIN && onWinCallback) {
         onWinCallback(markWith, streakIndex, streakType);
-    } else if (gameEndedWith === 'DRAW') {
+    } else if (gameEndedWith === GAME_STATUS.DRAW && onDrawCallback) {
         onDrawCallback();
     } else {
         dispatch(toggleTurn());
+        dispatch(updateGameState({newGameState: GAME_STATE.READY}));
     }
+
+    return gameEndedWith;
 }
 
 export function checkGameState(
@@ -41,11 +44,11 @@ export function checkGameState(
     row:number,
     col:number
 ):{
-    gameEndedWith: 'DRAW' | 'NONE',
+    gameEndedWith: GAME_STATUS.DRAW | GAME_STATUS.NONE,
     streakType: null,
     streakIndex: null
 } | {
-    gameEndedWith: 'WIN',
+    gameEndedWith: GAME_STATUS.WIN,
     streakType: STREAK_TYPE,
     streakIndex: number
 } {
@@ -54,26 +57,26 @@ export function checkGameState(
     else checkSum = -3;
 
     if (markedRows[row] === checkSum) {
-        return { gameEndedWith: 'WIN', streakType: STREAK_TYPE.R, streakIndex: row }
+        return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.R, streakIndex: row }
     }
 
     if (markedCols[col] === checkSum) {
-        return { gameEndedWith: 'WIN', streakType: STREAK_TYPE.C, streakIndex: col }
+        return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.C, streakIndex: col }
     }
 
     if (markedDiags[0] === checkSum) {
-        return { gameEndedWith: 'WIN', streakType: STREAK_TYPE.D, streakIndex: 0 }
+        return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.D, streakIndex: 0 }
     }
 
     if (markedDiags[1] === checkSum) {
-        return { gameEndedWith: 'WIN', streakType: STREAK_TYPE.D, streakIndex: 1 }
+        return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.D, streakIndex: 1 }
     }
 
     if (turnsCount === 9) {
-        return { gameEndedWith: 'DRAW', streakType: null, streakIndex: null }
+        return { gameEndedWith: GAME_STATUS.DRAW, streakType: null, streakIndex: null }
     }
 
-    return { gameEndedWith: 'NONE', streakType: null, streakIndex: null }
+    return { gameEndedWith: GAME_STATUS.NONE, streakType: null, streakIndex: null }
 }
 
 export function getComputerNextPosition():[number, number] {

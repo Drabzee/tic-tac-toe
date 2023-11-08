@@ -1,15 +1,16 @@
 import { Dispatch, SetStateAction } from "react"
 import ModalTemplate from "../ModalTemplate";
 import style from './style.module.scss';
-import { GAME_MODE, GAME_STATUS, MARK } from "../../types";
+import { GAME_MODE, GAME_STATE, GAME_STATUS, MARK } from "../../types";
 import { Case, Else, If, Switch, Then } from "react-if";
 import Cross from "../Cross";
 import Circle from "../Circle";
 import classNames from "classnames/bind";
 import { useDispatch, useSelector } from "../../redux/hooks";
-import { restartGame } from "../../redux/slices/game";
+import { restartGame, updateGameState } from "../../redux/slices/game";
 import { resetGame } from "../../redux/slices/dashboard";
 import { TPromptModalStatus } from "../../contexts/promptModalContext";
+import { getComputerNextPosition, markBlockWithMark } from "../../utilts";
 
 type PromptModalProps = {
   isModalOpen: TPromptModalStatus,
@@ -33,6 +34,14 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
   const restartButtonClickHandler = () => {
     setIsModalOpen(false);
     dispatch(restartGame());
+
+    if (gameMode === GAME_MODE.CPU && playerOneMark === MARK.O) {
+      const [compRow, compCol] = getComputerNextPosition();
+      markBlockWithMark(dispatch, MARK.X, compRow, compCol);
+      dispatch(updateGameState({newGameState: GAME_STATE.READY}));
+    } else {
+      dispatch(updateGameState({newGameState: GAME_STATE.READY}));
+    }
   }
 
   const renderWinnerBlock = () => {
@@ -87,7 +96,7 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
   return (
     <ModalTemplate isModalOpen={isModalOpen}>
       <div className={style.promptModal}>
-        {isModalOpen === GAME_STATUS.WON ? renderWinnerBlock() : renderDrawBlock()}
+        {isModalOpen === GAME_STATUS.WIN ? renderWinnerBlock() : renderDrawBlock()}
         <div className={style.ctaContainer}>
           <button onClick={quitButtonClickHandler}>QUIT</button>
           <button onClick={restartButtonClickHandler}>NEXT ROUND</button>

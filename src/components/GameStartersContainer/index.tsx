@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from '../../redux/hooks';
-import { GAME_MODE, MARK } from '../../types';
+import { GAME_MODE, GAME_STATE, MARK } from '../../types';
 import style from './style.module.scss';
 import { startGame } from '../../redux/slices/dashboard';
 import { getComputerNextPosition, markBlockWithMark } from '../../utilts';
+import { updateGameState } from '../../redux/slices/game';
 
 const GameStartersContainer = () => {
 
@@ -14,7 +15,10 @@ const GameStartersContainer = () => {
 
         if (playerOneMark === MARK.O) {
             const [compRow, compCol] = getComputerNextPosition();
-            markBlockWithMark(dispatch, MARK.X, compRow, compCol, () => {}, () => {});
+            markBlockWithMark(dispatch, MARK.X, compRow, compCol);
+            dispatch(updateGameState({newGameState: GAME_STATE.READY}));
+        } else {
+            dispatch(updateGameState({newGameState: GAME_STATE.READY}));
         }
     }
 

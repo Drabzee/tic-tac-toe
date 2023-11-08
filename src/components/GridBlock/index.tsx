@@ -1,4 +1,4 @@
-import { GAME_STATUS, MARK } from '../../types';
+import { GAME_MODE, GAME_STATUS, MARK, STREAK_TYPE } from '../../types';
 import Cross from '../Cross';
 import { Switch, Case, If, Then, Else } from 'react-if';
 import style from './style.module.scss';
@@ -6,9 +6,9 @@ import { useState, useContext } from 'react';
 import { useDispatch, useSelector } from '../../redux/hooks';
 import Circle from '../Circle';
 import classnames from 'classnames/bind';
-import { markBlock, markWin } from '../../redux/slices/game';
-import { checkIsDraw, checkWinner } from '../../utilts';
-import { markDraw, toggleTurn } from '../../redux/slices/dashboard';
+import { markWin } from '../../redux/slices/game';
+import { getComputerNextPosition, markBlockWithMark } from '../../utilts';
+import { markDraw } from '../../redux/slices/dashboard';
 import promptModalContext from '../../contexts/promptModalContext';
 
 type GridBlockProps = {
@@ -22,30 +22,35 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
 
   const [ isHovered, setIsHovered ] = useState<boolean>(false);
   const currentMark = useSelector(state => state.dashboard.currentMark);
+  const gameMode = useSelector(state => state.dashboard.gameMode);
   const dispatch = useDispatch();
   const { setIsModalOpen } = useContext(promptModalContext)!;
 
   const row = Math.floor(index / 3);
   const col = index % 3;
 
+  const handleGameWinEvent = (markedWith: MARK, streakIndex: number, streakType: STREAK_TYPE) => {
+    setIsHovered(false);
+    dispatch(markWin({mark: markedWith, streakIndex: streakIndex, streakType: streakType}));
+    setTimeout(() => {
+      setIsModalOpen(GAME_STATUS.WON);
+    }, 500);
+  }
+
+  const handleGameDrawEvent = () => {
+    dispatch(markDraw());
+    setTimeout(() => {
+      setIsModalOpen(GAME_STATUS.DRAW);
+    }, 500);
+  }
+
   const blockClickHandler = () => {
     if (currentMark && markedWith === null) {
-      dispatch(markBlock({ markedRow: row, markedCol: col, currentMark }));
-      const {isWinner, streakType, streakIndex} = checkWinner(currentMark, row, col);
+      markBlockWithMark(dispatch, currentMark, row, col, handleGameWinEvent, handleGameDrawEvent);
 
-      if (isWinner) {
-        setIsHovered(false);
-        dispatch(markWin({mark: currentMark, streakIndex: streakIndex, streakType: streakType}));
-        setTimeout(() => {
-          setIsModalOpen(GAME_STATUS.WON);
-        }, 500);
-      } else if (checkIsDraw()) {
-        dispatch(markDraw());
-        setTimeout(() => {
-          setIsModalOpen(GAME_STATUS.DRAW);
-        }, 500);
-      } else {
-        dispatch(toggleTurn());
+      if (gameMode === GAME_MODE.CPU) {
+        const [compRow, compCol] = getComputerNextPosition();
+        markBlockWithMark(dispatch, currentMark === MARK.X ? MARK.O : MARK.X, compRow, compCol, handleGameWinEvent, handleGameDrawEvent);
       }
     }
   }

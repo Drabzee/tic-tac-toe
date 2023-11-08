@@ -33,14 +33,12 @@ const gameSlice = createSlice({
     initialState: initialGameState,
     reducers: {
         markBlock: (state, action:PayloadAction<{markedRow:number, markedCol: number, currentMark:MARK}>) => {
-            let checkSum = 3;
             let incrementer = 1;
             const { markedRow, markedCol, currentMark } = action.payload;
 
             state.blockState[markedRow][markedCol] = currentMark;
 
             if (currentMark === MARK.O) {
-                checkSum *= -1;
                 incrementer *= -1;
             }
 
@@ -75,7 +73,7 @@ const gameSlice = createSlice({
                 }
                 case STREAK_TYPE.D: {
                     for (let i=0 ; i<3 ; i++) {
-                        let j = action.payload.streakIndex === 0 ? i : (2 - i);
+                        const j = action.payload.streakIndex === 0 ? i : (2 - i);
                         state.blockState[i][j] = higlightedMark;
                     }
                 }

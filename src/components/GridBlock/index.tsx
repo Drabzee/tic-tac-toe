@@ -36,7 +36,7 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
     dispatch(markWin({mark: markedWith, streakIndex: streakIndex, streakType: streakType}));
     setTimeout(() => {
       setIsModalOpen(GAME_STATUS.WIN);
-    }, 5000);
+    }, 500);
   }
 
   const handleGameDrawEvent = () => {
@@ -44,7 +44,7 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
     dispatch(markDraw());
     setTimeout(() => {
       setIsModalOpen(GAME_STATUS.DRAW);
-    }, 5000);
+    }, 500);
   }
 
   const blockClickHandler = () => {

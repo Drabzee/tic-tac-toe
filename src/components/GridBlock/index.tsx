@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from '../../redux/hooks';
 import Circle from '../Circle';
 import classnames from 'classnames/bind';
 import { markWin, updateGameState } from '../../redux/slices/game';
-import { getComputerNextPosition, markBlockWithMark } from '../../utilts';
+import { getNextBestPossibleMove, markBlockWithMark } from '../../utilts';
 import { markDraw } from '../../redux/slices/dashboard';
 import promptModalContext from '../../contexts/promptModalContext';
 
@@ -23,6 +23,7 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
   const [ isHovered, setIsHovered ] = useState<boolean>(false);
   const currentMark = useSelector(state => state.dashboard.currentMark);
   const playerOneMark = useSelector(state => state.dashboard.playerOneMark);
+  const opponentMark = playerOneMark === MARK.X ? MARK.O : MARK.X;
   const gameMode = useSelector(state => state.dashboard.gameMode);
   const dispatch = useDispatch();
   const { setIsModalOpen } = useContext(promptModalContext)!;
@@ -53,8 +54,8 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
 
       if (gameStatus === GAME_STATUS.NONE && gameMode === GAME_MODE.CPU) {
         dispatch(updateGameState({newGameState: GAME_STATE.HALT}));
-        const [compRow, compCol] = getComputerNextPosition();
-        markBlockWithMark(dispatch, playerOneMark === MARK.X ? MARK.O : MARK.X, compRow, compCol, handleGameWinEvent, handleGameDrawEvent);
+        const [compRow, compCol] = getNextBestPossibleMove(opponentMark);
+        markBlockWithMark(dispatch, opponentMark, compRow, compCol, handleGameWinEvent, handleGameDrawEvent);
       }
     }
   }

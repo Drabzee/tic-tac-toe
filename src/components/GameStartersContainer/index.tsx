@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from '../../redux/hooks';
 import { GAME_MODE, GAME_STATE, MARK } from '../../types';
 import style from './style.module.scss';
 import { startGame } from '../../redux/slices/dashboard';
-import { getComputerNextPosition, markBlockWithMark } from '../../utilts';
+import { getNextBestPossibleMove, markBlockWithMark } from '../../utilts';
 import { updateGameState } from '../../redux/slices/game';
 
 const GameStartersContainer = () => {
@@ -13,8 +13,8 @@ const GameStartersContainer = () => {
     const buttonClickHandler = (gameMode:GAME_MODE) => {
         dispatch(startGame(gameMode));
 
-        if (playerOneMark === MARK.O) {
-            const [compRow, compCol] = getComputerNextPosition();
+        if (gameMode === GAME_MODE.CPU && playerOneMark === MARK.O) {
+            const [compRow, compCol] = getNextBestPossibleMove(MARK.X);
             markBlockWithMark(dispatch, MARK.X, compRow, compCol);
             dispatch(updateGameState({newGameState: GAME_STATE.READY}));
         } else {

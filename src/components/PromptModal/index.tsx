@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "../../redux/hooks";
 import { restartGame, updateGameState } from "../../redux/slices/game";
 import { resetGame } from "../../redux/slices/dashboard";
 import { TPromptModalStatus } from "../../contexts/promptModalContext";
-import { getComputerNextPosition, markBlockWithMark } from "../../utilts";
+import { getNextBestPossibleMove, markBlockWithMark } from "../../utilts";
 
 type PromptModalProps = {
   isModalOpen: TPromptModalStatus,
@@ -36,7 +36,7 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
     dispatch(restartGame());
 
     if (gameMode === GAME_MODE.CPU && playerOneMark === MARK.O) {
-      const [compRow, compCol] = getComputerNextPosition();
+      const [compRow, compCol] = getNextBestPossibleMove(MARK.X);
       markBlockWithMark(dispatch, MARK.X, compRow, compCol);
       dispatch(updateGameState({newGameState: GAME_STATE.READY}));
     } else {

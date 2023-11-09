@@ -19,8 +19,6 @@ export function markBlockWithMark(
         rows,
         cols,
         diags,
-        rowIndex,
-        colIndex
     );
 
     if (gameEndedWith === GAME_STATUS.WIN && onWinCallback) {
@@ -41,8 +39,6 @@ export function checkGameState(
     markedRows: RootState['game']['rows'],
     markedCols: RootState['game']['cols'],
     markedDiags: RootState['game']['diags'],
-    row:number,
-    col:number
 ):{
     gameEndedWith: GAME_STATUS.DRAW | GAME_STATUS.NONE,
     streakType: null,
@@ -56,12 +52,16 @@ export function checkGameState(
     if (currentMark === MARK.X) checkSum = 3;
     else checkSum = -3;
 
-    if (markedRows[row] === checkSum) {
-        return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.R, streakIndex: row }
+    for (const row of markedRows) {
+        if (markedRows[row] === checkSum) {
+            return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.R, streakIndex: row }
+        }
     }
 
-    if (markedCols[col] === checkSum) {
-        return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.C, streakIndex: col }
+    for (const col of markedCols) {
+        if (markedCols[col] === checkSum) {
+            return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.C, streakIndex: col }
+        }
     }
 
     if (markedDiags[0] === checkSum) {
@@ -79,14 +79,104 @@ export function checkGameState(
     return { gameEndedWith: GAME_STATUS.NONE, streakType: null, streakIndex: null }
 }
 
-export function getComputerNextPosition():[number, number] {
-    const { game: { blockState } } = store.getState();
+export function getNextBestPossibleMove(currentMark: MARK):[number, number] {
+    const { game } = structuredClone(store.getState());
+
+    let bestScore:number = -Infinity;
+    let bestMove:[number, number] = [0, 0];
+    const incrementer = currentMark === MARK.X ? 1 : -1;
+
     for (let i=0 ; i < 3 ; i++) {
         for (let j=0 ; j<3 ; j++) {
-            if (blockState[i][j] === null) {
-                return [i,j];
+            if (game.blockState[i][j] === null) {
+                updateGridArraysForMarkedBlock(currentMark, incrementer, i, j, game);
+                const score = minimax(currentMark, game, 0, true);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = [i,j];
+                }
+                updateGridArraysForMarkedBlock(null, -1 * incrementer, i, j, game);
             }
         }
     }
-    return [0,0];
+
+    return bestMove;
+}
+
+const SCORE = {
+    WIN: 10,
+    LOSS: -10,
+    DRAW: 0,
+}
+
+function minimax(
+    maximizerMark: MARK,
+    gameData: RootState['game'],
+    depth: number,
+    isMaximizing: boolean
+):number {
+    const minimizerMark = maximizerMark === MARK.X ? MARK.O : MARK.X;
+    const currentMark = isMaximizing ? maximizerMark : minimizerMark;
+    const { gameEndedWith } = checkGameState(currentMark, gameData.turnsCount, gameData.rows, gameData.cols, gameData.diags);
+    
+    if (gameEndedWith !== GAME_STATUS.NONE) {
+        if (gameEndedWith === GAME_STATUS.DRAW) {
+            return SCORE[GAME_STATUS.DRAW];
+        }
+        return SCORE[currentMark === maximizerMark ? 'WIN' : 'LOSS'];
+    }
+
+    if (isMaximizing) {
+        let bestScore:number = -Infinity;
+        const incrementer = currentMark === MARK.X ? 1 : -1;
+
+        for (let i=0 ; i < 3 ; i++) {
+            for (let j=0 ; j<3 ; j++) {
+                if (gameData.blockState[i][j] === null) {
+                    updateGridArraysForMarkedBlock(currentMark, incrementer, i, j, gameData);
+                    const score = minimax(maximizerMark, gameData, depth + 1, false);
+                    bestScore = Math.max(bestScore, score);
+                    updateGridArraysForMarkedBlock(null, -1 * incrementer, i, j, gameData);
+                }
+            }
+        }
+        return bestScore;
+    } else {
+        let worstScore:number = Infinity;
+        const incrementer = currentMark === MARK.X ? 1 : -1;
+
+        for (let i=0 ; i < 3 ; i++) {
+            for (let j=0 ; j<3 ; j++) {
+                if (gameData.blockState[i][j] === null) {
+                    updateGridArraysForMarkedBlock(currentMark, incrementer, i, j, gameData);
+                    const score = minimax(maximizerMark, gameData, depth + 1, true);
+                    worstScore = Math.min(worstScore, score);
+                    updateGridArraysForMarkedBlock(null, -1 * incrementer, i, j, gameData);
+                }
+            }
+        }
+
+        return worstScore;
+    }
+}
+
+function updateGridArraysForMarkedBlock(
+    markWith: MARK | null,
+    incrementer: number,
+    rowIndex: number,
+    colIndex: number,
+    gameData: RootState['game'],
+    ) {
+    const { blockState, rows, cols, diags } = gameData;
+    blockState[rowIndex][colIndex] = markWith;
+    rows[rowIndex] = rows[rowIndex] + incrementer;
+    cols[colIndex] = cols[colIndex] + incrementer;
+    if (rowIndex === colIndex) diags[0] = diags[0] + incrementer;
+    if (rowIndex + colIndex === 2) diags[1] = diags[1] + incrementer;
+
+    if (markWith === null) {
+        gameData.turnsCount -= 1;
+    } else {
+        gameData.turnsCount += 1;
+    }
 }

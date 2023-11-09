@@ -11,7 +11,7 @@ import { If, Then, Else } from "react-if";
 import Cross from "../Cross";
 import { resetGame } from "../../redux/slices/dashboard";
 import { restartGame, updateGameState } from "../../redux/slices/game";
-import { getComputerNextPosition, markBlockWithMark } from "../../utilts";
+import { getNextBestPossibleMove, markBlockWithMark } from "../../utilts";
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(style);
@@ -26,7 +26,7 @@ const BoardController = () => {
   const restartButtonClickHandler = () => {
     dispatch(restartGame());
     if (gameMode === GAME_MODE.CPU && playerOneMark === MARK.O) {
-      const [compRow, compCol] = getComputerNextPosition();
+      const [compRow, compCol] = getNextBestPossibleMove(MARK.X);
       markBlockWithMark(dispatch, MARK.X, compRow, compCol);
       dispatch(updateGameState({ newGameState: GAME_STATE.READY }));
     } else {

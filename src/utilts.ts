@@ -52,15 +52,15 @@ export function checkGameState(
     if (currentMark === MARK.X) checkSum = 3;
     else checkSum = -3;
 
-    for (const row of markedRows) {
-        if (markedRows[row] === checkSum) {
-            return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.R, streakIndex: row }
+    for (let i=0 ; i<3 ; i++) {
+        if (markedRows[i] === checkSum) {
+            return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.R, streakIndex: i }
         }
     }
 
-    for (const col of markedCols) {
-        if (markedCols[col] === checkSum) {
-            return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.C, streakIndex: col }
+    for (let i=0 ; i<3 ; i++) {
+        if (markedCols[i] === checkSum) {
+            return { gameEndedWith: GAME_STATUS.WIN, streakType: STREAK_TYPE.C, streakIndex: i }
         }
     }
 
@@ -79,18 +79,18 @@ export function checkGameState(
     return { gameEndedWith: GAME_STATUS.NONE, streakType: null, streakIndex: null }
 }
 
-export function getNextBestPossibleMove(currentMark: MARK):[number, number] {
+export function getNextBestPossibleMove(mark: MARK):[number, number] {
     const { game } = structuredClone(store.getState());
 
     let bestScore:number = -Infinity;
     let bestMove:[number, number] = [0, 0];
-    const incrementer = currentMark === MARK.X ? 1 : -1;
+    const incrementer = mark === MARK.X ? 1 : -1;
 
     for (let i=0 ; i < 3 ; i++) {
         for (let j=0 ; j<3 ; j++) {
             if (game.blockState[i][j] === null) {
-                updateGridArraysForMarkedBlock(currentMark, incrementer, i, j, game);
-                const score = minimax(currentMark, game, 0, true);
+                updateGridArraysForMarkedBlock(mark, incrementer, i, j, game);
+                const score = minimax(mark, game, 0, false);
                 if (score > bestScore) {
                     bestScore = score;
                     bestMove = [i,j];
@@ -155,7 +155,6 @@ function minimax(
                 }
             }
         }
-
         return worstScore;
     }
 }

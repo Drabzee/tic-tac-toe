@@ -117,13 +117,14 @@ function minimax(
 ):number {
     const minimizerMark = maximizerMark === MARK.X ? MARK.O : MARK.X;
     const currentMark = isMaximizing ? maximizerMark : minimizerMark;
-    const { gameEndedWith } = checkGameState(currentMark, gameData.turnsCount, gameData.rows, gameData.cols, gameData.diags);
-    
+    const previousMark = currentMark === MARK.X ? MARK.O : MARK.X;
+    const { gameEndedWith } = checkGameState(previousMark, gameData.turnsCount, gameData.rows, gameData.cols, gameData.diags);
+
     if (gameEndedWith !== GAME_STATUS.NONE) {
         if (gameEndedWith === GAME_STATUS.DRAW) {
             return SCORE[GAME_STATUS.DRAW];
         }
-        return SCORE[currentMark === maximizerMark ? 'WIN' : 'LOSS'];
+        return SCORE[previousMark === maximizerMark ? 'WIN' : 'LOSS'];
     }
 
     if (isMaximizing) {

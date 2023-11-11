@@ -124,7 +124,7 @@ function minimax(
         if (gameEndedWith === GAME_STATUS.DRAW) {
             return SCORE[GAME_STATUS.DRAW];
         }
-        return SCORE[previousMark === maximizerMark ? 'WIN' : 'LOSS'];
+        return SCORE[previousMark === maximizerMark ? 'WIN' : 'LOSS'] - depth;
     }
 
     if (isMaximizing) {
@@ -179,4 +179,11 @@ function updateGridArraysForMarkedBlock(
     } else {
         gameData.turnsCount += 1;
     }
+}
+
+export function getRandomMove(): [number, number] {
+    const index = Math.floor(Math.random() * 9);
+    const rowIndex = Math.floor(index / 3);
+    const colIndex = index % 3; 
+    return [rowIndex, colIndex]
 }

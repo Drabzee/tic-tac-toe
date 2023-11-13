@@ -199,3 +199,7 @@ function updateGridArraysForMarkedBlock(
         gameData.turnsCount += 1;
     }
 }
+
+export function getAsset(uri: string) {
+    return '/' + import.meta.env.BASE_URL.replace(/(^\/|\/$)/g, '') + uri;
+}

@@ -1,5 +1,6 @@
 import { useSelector } from "../../redux/hooks"
 import { GAME_MODE, MARK } from "../../types";
+import { getAsset } from "../../utilts";
 import style from './style.module.scss';
 import classNames from "classnames/bind";
 
@@ -32,7 +33,7 @@ const ComputerIndicator = () => {
       )
     }>
         <span>Your opponent is thinking</span>
-        <img src="/loader.gif" alt="loader" />
+        <img src={getAsset('/loader.gif')} alt="loader" />
     </div>
   )
 }

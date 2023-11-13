@@ -50,6 +50,7 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
 
   const blockClickHandler = async () => {
     if (currentMark && markedWith === null) {
+      setIsHovered(false);
       const gameStatus = markBlockWithMark(dispatch, currentMark, row, col, handleGameWinEvent, handleGameDrawEvent);
 
       if (gameStatus === GAME_STATUS.NONE && gameMode === GAME_MODE.CPU) {

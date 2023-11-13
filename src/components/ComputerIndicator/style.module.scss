@@ -1,0 +1,17 @@
+.indicator {
+    margin: 10px 0 15px;
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    &.is-visible {
+        visibility: visible;
+    }
+    
+    img {
+        width: 20px;
+        height: 20px;
+    }
+}

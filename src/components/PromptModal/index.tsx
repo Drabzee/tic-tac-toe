@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "../../redux/hooks";
 import { restartGame, updateGameState } from "../../redux/slices/game";
 import { resetGame } from "../../redux/slices/dashboard";
 import { TPromptModalStatus } from "../../contexts/promptModalContext";
-import { getRandomMove, markBlockWithMark } from "../../utilts";
+import { getComputerNextMove, markBlockWithMark } from "../../utilts";
 
 type PromptModalProps = {
   isModalOpen: TPromptModalStatus,
@@ -31,12 +31,12 @@ const PromptModal = ({ isModalOpen, setIsModalOpen }:PromptModalProps) => {
     dispatch(resetGame());
   }
 
-  const restartButtonClickHandler = () => {
+  const restartButtonClickHandler = async () => {
     setIsModalOpen(false);
     dispatch(restartGame());
 
     if (gameMode === GAME_MODE.CPU && playerOneMark === MARK.O) {
-      const [compRow, compCol] = getRandomMove();
+      const [compRow, compCol] = await getComputerNextMove();
       markBlockWithMark(dispatch, MARK.X, compRow, compCol);
       dispatch(updateGameState({newGameState: GAME_STATE.READY}));
     } else {

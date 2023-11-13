@@ -6,9 +6,6 @@ export function register() {
                             : 'dev-sw.js?dev-sw';
             navigator.serviceWorker
                 .register(import.meta.env.BASE_URL + swFileName)
-                .then(() => {
-                    console.log('Service Worker: Registered');
-                })
                 .catch(err => console.log(err));
         });
     }

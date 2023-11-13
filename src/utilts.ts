@@ -79,7 +79,26 @@ export function checkGameState(
     return { gameEndedWith: GAME_STATUS.NONE, streakType: null, streakIndex: null }
 }
 
-export function getNextBestPossibleMove(mark: MARK):[number, number] {
+export function getComputerNextMove(markForBestMove?: MARK): Promise<[number, number]> {
+    return new Promise(res => {
+        setTimeout(() => {
+            if (markForBestMove) {
+                res(getBestPossibleMove(markForBestMove));
+            } else {
+                res(getRandomMove());
+            }
+        }, 1000);
+    });
+}
+
+function getRandomMove(): [number, number] {
+    const index = Math.floor(Math.random() * 9);
+    const rowIndex = Math.floor(index / 3);
+    const colIndex = index % 3; 
+    return [rowIndex, colIndex]
+}
+
+function getBestPossibleMove(mark: MARK):[number, number] {
     const { game } = structuredClone(store.getState());
 
     let bestScore:number = -Infinity;
@@ -179,11 +198,4 @@ function updateGridArraysForMarkedBlock(
     } else {
         gameData.turnsCount += 1;
     }
-}
-
-export function getRandomMove(): [number, number] {
-    const index = Math.floor(Math.random() * 9);
-    const rowIndex = Math.floor(index / 3);
-    const colIndex = index % 3; 
-    return [rowIndex, colIndex]
 }

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from '../../redux/hooks';
 import Circle from '../Circle';
 import classnames from 'classnames/bind';
 import { markWin, updateGameState } from '../../redux/slices/game';
-import { getNextBestPossibleMove, markBlockWithMark } from '../../utilts';
+import { getComputerNextMove, markBlockWithMark } from '../../utilts';
 import { markDraw } from '../../redux/slices/dashboard';
 import promptModalContext from '../../contexts/promptModalContext';
 
@@ -48,13 +48,13 @@ const GridBlock = ({ markedWith, index }:GridBlockProps) => {
     }, 500);
   }
 
-  const blockClickHandler = () => {
+  const blockClickHandler = async () => {
     if (currentMark && markedWith === null) {
       const gameStatus = markBlockWithMark(dispatch, currentMark, row, col, handleGameWinEvent, handleGameDrawEvent);
 
       if (gameStatus === GAME_STATUS.NONE && gameMode === GAME_MODE.CPU) {
         dispatch(updateGameState({newGameState: GAME_STATE.HALT}));
-        const [compRow, compCol] = getNextBestPossibleMove(opponentMark);
+        const [compRow, compCol] = await getComputerNextMove(opponentMark);
         markBlockWithMark(dispatch, opponentMark, compRow, compCol, handleGameWinEvent, handleGameDrawEvent);
       }
     }
